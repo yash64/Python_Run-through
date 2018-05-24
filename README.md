@@ -9,3 +9,6 @@ Practicing Python with focus being majorly on data cleaning, treating missing va
 5. Merge-Joins-Concatenation
 6. Pivot table
 7. Visualization
+
+
+Reference: [Python-Pandas](http://pandas.pydata.org/pandas-docs/stable/index.html)
