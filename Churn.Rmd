@@ -1,0 +1,81 @@
+---
+title: "Churn Prediction"
+author: "Yaswanth Kumar Reddy"
+date: "May 31, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem Statement
+
+In telecom domain where the customer acquisition has higher cost than customer retention and where there is a rampant price war, it becomes important to predict and profile the customer behavior and predict them so that offers can be rolled out to retain them prior to switching.
+ 
+Data consist of the various behavior of customers and the last column states if the customer is still with the existing telecom company or not.
+
+## Objective
+
+1. Understand factors contributing to customer churn.
+2. Build a churn prediction model.
+3. Model evaluation.
+4. What can be done to restrict customers from churning.
+
+```{r eval=FALSE, echo=FALSE}
+setwd("D:/Users/1015624/GE Internal/My Docs/Work/Telecom")
+```
+
+```{r eval=FALSE}
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+```
+
+## Data Overview
+
+Read the data
+
+```{r}
+dat <- read.csv("data.csv")
+```
+
+Looking at the summary of the data. *Churn* is our target variable.
+
+```{r eval=FALSE}
+summary(dat)
+head(dat)
+```
+
+From the summary of the data it is observed that there are no missing values. For a confirmation we shall check again if there are any NAs in each column .
+
+```{r}
+colSums(is.na(dat))
+```
+
+```{r}
+dim(dat)
+```
+
+The distribution of target variable is more or less fine .
+
+```{r}
+prop.table(table(dat$Churn))
+```
+
+## Data Cleaning/Data Preprocessing
+
+
+```{r}
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
