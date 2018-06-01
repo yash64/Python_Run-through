@@ -23,10 +23,10 @@ Data consist of the various behavior of customers and the last column states if 
 4. What can be done to restrict customers from churning.
 
 ```{r eval=FALSE, echo=FALSE}
-setwd("D:/Users/1015624/GE Internal/My Docs/Work/Telecom")
+setwd("E:/My Work/Dataset/Telecom Churn")
 ```
 
-```{r eval=FALSE}
+```{r message=FALSE}
 library(dplyr)
 library(ggplot2)
 library(reshape2)
@@ -65,17 +65,97 @@ prop.table(table(dat$Churn))
 
 ## Data Cleaning/Data Preprocessing
 
+This step essentially involves in 
+
+1. Cleaning/Fromatting/Transforming the data.
+2. Treating missing values/outliers if any.
+3. Creating new features from existing ones.
+
+Converting Area.Code to factor
+```{r}
+dat$Area.code = as.factor(dat$Area.code)
+```
+
+Assuming Account.Length attribute as the age of the customer since using the network. I assume it is in no. of days.  
+This feature is a continuous variable and may not give us an exact outlook on churning customers based on their age. So creating different bins might be useful.
 
 ```{r}
+dat$Acc.Length.Bin <- ifelse(dat$Account.length > 0 & dat$Account.length <= 30, '0-30 days',
+                             ifelse(dat$Account.length > 30 & dat$Account.length <= 60, '30-60 days',
+                                    ifelse(dat$Account.length > 60 & dat$Account.length <= 90, '60-90 days',
+                                           ifelse(dat$Account.length > 90 & dat$Account.length <= 120, '90-120 days',
+                                           ifelse(dat$Account.length > 120 & dat$Account.length <= 180, '120-180 days','>180 days')))))
+
+table(dat$Acc.Length.Bin)
+```
+
+We have different features based on the call timings as *day_calls*, *eve_calls*, *night_calls*. Though it is good to have these details separately let us create new feature for each of them combinedly and see if we can find something from this.
+
+```{r}
+dat$Total.minutes <- dat$Total.day.minutes + dat$Total.eve.minutes + dat$Total.night.minutes
+dat$Total.calls <- dat$Total.day.calls + dat$Total.eve.calls + dat$Total.night.calls
+dat$Total.charge <- dat$Total.day.charge + dat$Total.eve.charge + dat$Total.night.charge
+```
+
+Checking outliers newly created features.
+
+```{r echo=FALSE}
+par(mfrow = c(1,3))
+boxplot(dat$Total.minutes, main = 'Total_Minutes')
+boxplot(dat$Total.calls, main = 'Total_Calls')
+boxplot(dat$Total.charge, main = 'Total_Charge')
+```
+
+There are very few Outliers which can be ignored. *Total.charge* has more outliers compared to other 2 variables but the data is not skewed eventhough it has outliers.
+
+So, for now we will end preprocessing here. Incase if we need to create new features while doing exploratory analysis we can do it as needed.
+
+##Exploratory Analysis
+
+Exploratory data analysis is one of the major steps in data modelling. What we can do or get from this step is:
+
+1. Know the variables better by visualizing.
+2. Find the variables which are impacting customer churn.
+3. Find patterns and behaviour of customers.
+
+#### Area wise Churn customers
+
+From below plot we can see that *415* area has the most customers and obviously churn customers is also high compared to other 2 areas.
+
+```{r echo=FALSE}
+ggplot(dat, aes(x = Area.code)) + geom_bar(aes(fill = Churn), width = 0.4) + labs(title = "Area wise Churn") + theme(plot.title = element_text(hjust = 0.5))
+```
+
+#### Churn based on Age
+
+Looking at the plot, we have most of our customers whose age is more than 60 days and most of the churn happens here.
+
+```{r echo=FALSE}
+ggplot(dat, aes(x=factor(dat$Acc.Length.Bin, levels = c('0-30 days', '30-60 days','60-90 days','90-120 days', '120-180 days','>180 days')))) + geom_bar(aes(fill = Churn),width = 0.4) + labs(title = 'Churn based on Age on Network', x = 'Age on Network') + theme(plot.title = element_text(hjust = 0.5))
+```
+
+#### Internation Plan Customers
+
+
+```{r}
+# ggplot(dat, aes(Churn)) + geom_bar() + facet_wrap(~International.plan, scales = 'free')
+ggplot(dat, aes(International.plan, fill = Churn)) + geom_bar(position = "fill", width = 0.4)
 
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+
+
+
+
+
+
+
+
+
+
