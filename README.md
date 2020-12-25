@@ -1,5 +1,5 @@
 # Python_Run-through
-Basic Python with focus being majorly on data cleaning, treating missing values and exploratory data analysis(EDA) using Pandas.
+Basic Python on data cleaning, treating missing values and exploratory data analysis(EDA) using Pandas.
 
 ## Contents
 1. Creating Dataframes
